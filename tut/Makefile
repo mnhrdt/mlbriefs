@@ -5,4 +5,4 @@ a.qmd: a.py
 	jupytext a.py --to qmd
 
 clean:
-	$(RM) a.qmd b.html
+	$(RM) a.qmd a.html

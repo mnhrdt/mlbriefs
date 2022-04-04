@@ -1,0 +1,6 @@
+run "make" to run all experiments and convert .py to .html
+
+you can view the .html with a web browser
+
+you can also run "jupyter-notebook --no-browser ." and go to the indicated URL
+to see the notebook live

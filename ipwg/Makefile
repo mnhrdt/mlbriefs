@@ -1,4 +1,4 @@
-SRC = a.py b.py
+SRC = a.py
 QMD = $(SRC:.py=.qmd)
 HTM = $(SRC:.py=.html)
 

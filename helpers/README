@@ -1,0 +1,3 @@
+cp custom.css ~/.jupyter/custom/
+cp notebook.json ~/.jupyter/nbconfig/
+

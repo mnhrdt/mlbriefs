@@ -1,2 +1,3 @@
 tutorial : "hello world" example jupytext notebook with makefile
 ipwg     : "image processing with graphs" ipol notebook
+helpers  : misc configuration files for a saner environment

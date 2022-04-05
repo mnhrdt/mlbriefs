@@ -1,0 +1,3 @@
+/* remove stupid margins around notebook */
+.container { width:100% !important; }
+div#site { height: 100% !important; }

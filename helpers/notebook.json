@@ -1,0 +1,19 @@
+{
+  "Notebook": {
+    "Header": false,
+    "Toolbar": false
+  },
+  "CodeCell": {
+    "cm_config": {
+      "autoCloseBrackets": false,
+      "indentUnit": 8,
+      "tabSize": 8,
+      "indentWithTabs": true
+    }
+  },
+  "Cell": {
+    "cm_config": {
+      "lineNumbers": false
+    }
+  }
+}

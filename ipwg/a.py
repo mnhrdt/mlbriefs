@@ -19,10 +19,10 @@
 
 # $$m=H(W-1)+W(H-1)$$
 
-# The following function builds the signed incidence matrix of a $W\times H$
-# grid graph.
+# The following function builds the signed *incidence matrix* of a $W\times H$
+# grid graph.  It is a matrix of $n$ columns and $m$ rows.
 
-def incidence_grid(w, h):
+def grid_incidence(w, h):
 	""" Build the signed incidence matrix of a WxH grid graph """
 	from scipy.sparse import eye, kron, vstack
 	x = eye(w-1, w, 1) - eye(w-1, w)             # path graph of length W
@@ -32,9 +32,27 @@ def incidence_grid(w, h):
 	B = vstack([Bx, By])                         # union of all paths
 	return B
 
-B = incidence_grid(2,3)
+# A similar construction builds the *adjacency matrix*, which is square of size
+# $n$.
+
+def grid_adjacency(w, h):
+	""" Build the adjacency matrix of a WxH grid graph """
+	from scipy.sparse import eye, kronsum
+	x = eye(w, w, 1)                             # oriented path of length W
+	y = eye(h, h, 1)                             # oriented path of length H
+	G = kronsum(x, y)                            # graph product
+	A = G + G.T                                  # symmetrization
+	return A
+
+# We will also construct the *Laplacian matrix* of the graph, defined as
+# $L=-B^\top B$.  There are many algebraic relationships between the Laplacian,
+# adjacency and incidence matrix.  The non-diagonal entries of the Laplacian
+# matrix are the adjacency matrix.
 
 # ## Morphological operators
+
+# Mathematical morphology is based on applying the adjacency matrix as an
+# operator acting on binary images.
 
 # ## Local linear operators
 

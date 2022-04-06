@@ -125,6 +125,8 @@ image_render("x_A.png", y.reshape(h, w))
 
 # Now let's do some morphology
 
+
+
 m = 1.0 * (x > 66)          # binarized image
 E = A.copy();E.setdiag(1)   # structuring element E = A + I
 y = E**6 @ m                # apply it 6 times
@@ -139,6 +141,65 @@ image_render("x_6_morphogray.png", 255 * y.reshape(h, w) / y.max())
 image_render("x_6_dilation.png",   255 * y1.reshape(h, w))
 image_render("x_6_erosion.png",    255 * y2.reshape(h, w))
 image_render("x_6_median.png",     255 * y3.reshape(h, w))
+
+
+
+
+def grid_structuring_element(h, w):
+	""" Build the adjacency matrix of a WxH grid graph """
+	from scipy.sparse import eye
+	A = grid_adjacency(h, w)
+	E = A + eye(w*h)
+	return E
+
+def dilation(E, x):
+	from scipy.sparse import diags
+	y = (diags(x.squeeze()) @ E).max(axis=0).A.T.squeeze()
+	return y
+
+# y = dilation(E, x)
+# image_render("x_dilation.png", y.reshape(h,w))
+
+def erosion(E, x):
+	m = 1 + x.max()
+	t = m - x
+	y = m - dilation(E, t)
+	return y
+
+
+def opening(E, x):     return dilation(E, erosion(E, x))
+def closing(E, x):     return erosion(E, dilation(E, x))
+def egradient(E, x):   return x - erosion(E, x)
+def igradient(E, x):   return dilation(E, x) - x
+def cgradient(E, x):   return (igradient(E,x) + egradient(E,x))/2
+def mlaplacian(E, x):  return (igradient(E,x) - egradient(E,x))/2
+def msharpen(E, x):    return x - mlaplacian(E, x)
+def mblur(E, x):       return x + mlaplacian(E, x)
+def tophat(E, x):      return x - opening(E, x)
+def bothat(E, x):      return closing(E, x) - x
+
+E = grid_structuring_element(h, w)
+E = 1.0 * (E**3 > 0)
+image_render("x_dilation.png",   dilation(E,x).reshape(h,w))
+image_render("x_erosion.png",    erosion(E,x).reshape(h,w))
+image_render("x_opening.png",    opening(E,x).reshape(h,w))
+image_render("x_closing.png",    closing(E,x).reshape(h,w))
+image_render("x_egradient.png",  2*egradient(E,x).reshape(h,w))
+image_render("x_igradient.png",  2*igradient(E,x).reshape(h,w))
+image_render("x_cgradient.png",  2*cgradient(E,x).reshape(h,w))
+image_render("x_mlaplacian.png", 127-4*mlaplacian(E,x).reshape(h,w))
+image_render("x_msharpen.png",   msharpen(E,x).reshape(h,w))
+image_render("x_mblur.png",      mblur(E,x).reshape(h,w))
+image_render("x_tophat.png",     6*tophat(E,x).reshape(h,w))
+image_render("x_bothat.png",     255-6*bothat(E,x).reshape(h,w))
+
+ex = erosion(E, x)
+
+
+ex.shape
+
+
+
 
 
 # ## Local linear operators
@@ -165,3 +226,5 @@ image_render("x_6_median.png",     255 * y3.reshape(h, w))
 
 
 # vim:set tw=79 filetype=python spell spelllang=en:
+
+

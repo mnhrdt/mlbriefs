@@ -3,7 +3,7 @@
 set -eu
 
 # copy the notebook to the execution directory so that it can be updated by quarto
-cp $bin/ipwg/main.ipynb .
+cp $bin/ipwg/a.py .
 
 
 # fetch parameters
@@ -16,7 +16,8 @@ done
 
 # Run and render the notebook
 #quarto render main.ipynb -o output.html --execute $params
-quarto render main.ipynb -o output.html --execute $params
+jupytext a.py a.qmd
+quarto render a.qmd -o output.html
 
 # create an iframe for the IPOL page
 viewer_url="https://ipolcore.ipol.im/api/core/shared_folder/run/${IPOL_DEMOID}/${IPOL_KEY}/output.html"

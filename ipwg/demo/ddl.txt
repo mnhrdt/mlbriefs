@@ -1,0 +1,52 @@
+{
+	"general": {
+		"demo_title": "Image Processing With Graphs",
+		"xlink_article": "",
+		"timeout": "60",
+		"requirements": "DR1"
+	},
+	"build": {
+		"build1": {
+			"url": "http://dev.ipol.im/~tina/projects/dogface.tar.gz",
+			"construct": "mkdocker ipol:v1-py3.9 ipwg/requirements.txt",
+			"move": "ipwg, dockerizer-image"
+		}
+	},
+	"archive": {
+		"files": {
+			"input_0.png": "input image",
+			"output.html": "output notebook"
+		},
+		"enable_reconstruct": "true",
+		"info": {
+			"run_time": "run time"
+		}
+	},
+	"inputs": [
+		{
+			"description": "input",
+			"max_pixels": "1000*1000",
+			"dtype": "3x8i",
+			"ext": ".png",
+			"type": "image",
+			"max_weight": "10* 1024 *1024"
+		}
+	],
+	"results": [
+		{
+			"type": "html_text",
+			"contents": "info.url"
+		},
+		{
+			"contents": "stdout.txt",
+			"label": "<p>stdout</p>",
+			"type": "text_file"
+		},
+		{
+			"contents": "stderr.txt",
+			"label": "<p>stderr</p>",
+			"type": "text_file"
+		}
+	],
+	"run": "dockerize bash $bin/ipwg/run.sh"
+}

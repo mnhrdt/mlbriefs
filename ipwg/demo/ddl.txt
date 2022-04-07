@@ -7,7 +7,7 @@
 	},
 	"build": {
 		"build1": {
-			"url": "http://dev.ipol.im/~tina/projects/dogface.tar.gz",
+			"url": "https://mnhrdt.github.io/mlbriefs/ipwg.tar.gz",
 			"construct": "mkdocker ipol:v1-py3.9 ipwg/requirements.txt",
 			"move": "ipwg, dockerizer-image"
 		}
@@ -26,7 +26,7 @@
 		{
 			"description": "input",
 			"max_pixels": "1000*1000",
-			"dtype": "3x8i",
+			"dtype": "1x8i",
 			"ext": ".png",
 			"type": "image",
 			"max_weight": "10* 1024 *1024"

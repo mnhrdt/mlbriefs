@@ -15,6 +15,7 @@ done
 
 
 # Run and render the notebook
+#quarto render main.ipynb -o output.html --execute $params
 quarto render main.ipynb -o output.html --execute $params
 
 # create an iframe for the IPOL page

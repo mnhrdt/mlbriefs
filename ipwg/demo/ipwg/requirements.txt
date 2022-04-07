@@ -2,3 +2,4 @@ numpy
 scipy
 iio
 jupyter
+jupytext

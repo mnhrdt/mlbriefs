@@ -60,6 +60,10 @@ def grid_adjacency(h, w):
 # 	\qquad
 # \mathrm{stencil}(L)=
 # \begin{array}{|c|c|c|}\hline0&1&0\\\hline1&\!\!\!-4\!\!\!&1\\\hline0&1&0\\\hline\end{array}
+# 	\qquad
+# 	\qquad
+# \mathrm{stencil}(E)=
+# \begin{array}{|c|c|c|}\hline0&1&0\\\hline1&1&1\\\hline0&1&0\\\hline\end{array}
 # $$
 
 # We also define a few administrative functions to load and display
@@ -92,12 +96,12 @@ def image_render(f, x):
 
 # Let's try these functions with a trivial example:
 
-x = image_read("x.png")            # load an image from current directory
-h, w = x.shape                      # extract height and width (note the order)
-x[:,:w//2] = 0                      # paint the left side in black
-x = image_write("x_cut.png", x)    # save the modified image
-image_display("x.png")             # display original image
-image_display("x_cut.png")         # display modified image
+x = image_read("x.png")        # load an image from current directory
+h, w = x.shape                 # extract height and width (note the order)
+x[:,:w//2] = 0                 # paint the left side in black
+image_write("x_cut.png", x)    # save the modified image
+image_display("x.png")         # display original image
+image_display("x_cut.png")     # display modified image
 
 
 # ## Morphological operators
@@ -123,6 +127,9 @@ image_render("x_A.png", y.reshape(h, w))
 # The result is a bit difficult to interpret... the image looks much brighter
 # and maybe a bit blurry.
 
+
+# ### Morphology of binary data
+
 # Now let's do some morphology
 
 
@@ -143,22 +150,19 @@ image_render("x_6_erosion.png",    255 * y2.reshape(h, w))
 image_render("x_6_median.png",     255 * y3.reshape(h, w))
 
 
-
-
 def grid_structuring_element(h, w):
-	""" Build the adjacency matrix of a WxH grid graph """
+	""" Build the "cross" structuring element matrix of a WxH image """
 	from scipy.sparse import eye
 	A = grid_adjacency(h, w)
 	E = A + eye(w*h)
 	return E
 
+# ### Gray-level morphology
+
 def dilation(E, x):
 	from scipy.sparse import diags
 	y = (diags(x.squeeze()) @ E).max(axis=0).A.T.squeeze()
 	return y
-
-# y = dilation(E, x)
-# image_render("x_dilation.png", y.reshape(h,w))
 
 def erosion(E, x):
 	m = 1 + x.max()
@@ -179,30 +183,73 @@ def tophat(E, x):      return x - opening(E, x)
 def bothat(E, x):      return closing(E, x) - x
 
 E = grid_structuring_element(h, w)
-E = 1.0 * (E**3 > 0)
-image_render("x_dilation.png",   dilation(E,x).reshape(h,w))
-image_render("x_erosion.png",    erosion(E,x).reshape(h,w))
-image_render("x_opening.png",    opening(E,x).reshape(h,w))
-image_render("x_closing.png",    closing(E,x).reshape(h,w))
-image_render("x_egradient.png",  2*egradient(E,x).reshape(h,w))
-image_render("x_igradient.png",  2*igradient(E,x).reshape(h,w))
-image_render("x_cgradient.png",  2*cgradient(E,x).reshape(h,w))
-image_render("x_mlaplacian.png", 127-4*mlaplacian(E,x).reshape(h,w))
-image_render("x_msharpen.png",   msharpen(E,x).reshape(h,w))
-image_render("x_mblur.png",      mblur(E,x).reshape(h,w))
-image_render("x_tophat.png",     6*tophat(E,x).reshape(h,w))
-image_render("x_bothat.png",     255-6*bothat(E,x).reshape(h,w))
-
-ex = erosion(E, x)
-
-
-ex.shape
-
-
+#E = 1.0 * (E**3 > 0)
+image_render("x_dilation.png",   dilation(E,x)           .reshape(h,w))
+image_render("x_erosion.png",    erosion(E,x)            .reshape(h,w))
+image_render("x_opening.png",    opening(E,x)            .reshape(h,w))
+image_render("x_closing.png",    closing(E,x)            .reshape(h,w))
+image_render("x_egradient.png",  2*egradient(E,x)        .reshape(h,w))
+image_render("x_igradient.png",  2*igradient(E,x)        .reshape(h,w))
+image_render("x_cgradient.png",  2*cgradient(E,x)        .reshape(h,w))
+image_render("x_mlaplacian.png", 127-4*mlaplacian(E,x)   .reshape(h,w))
+image_render("x_msharpen.png",   msharpen(E,x)           .reshape(h,w))
+image_render("x_mblur.png",      mblur(E,x)              .reshape(h,w))
+image_render("x_tophat.png",     6*tophat(E,x)           .reshape(h,w))
+image_render("x_bothat.png",     255-6*bothat(E,x)       .reshape(h,w))
 
 
 
 # ## Local linear operators
+
+# On a graph, real-valued functions defined on the edges are called *scalar
+# fields*, and real-valued functions defined on the vertices are called *vector
+# fields*.  In the case of a grid graph, the interpretation of vector field is
+# straightforward: the values of a vector field on the two outgoing edges
+# from a vertex are the two components of the vector at that point.
+
+# If the graph has $n$ vertices and $m$ edges, then its
+# signed incidence matrix $B$ has $n$ columns and $m$ rows.
+# Thus, it can be interpreted as a linear mapping that transforms scalar to
+# vector fields.  This linear map is called the *gradient*.  Similarly, the
+# *divergence* is the linear map whose matrix is $-B^\top$ and
+# transforms vector to scalar fields.  Finally, the *Laplacian* is the
+# divergence of the gradient $-B^\top B$.
+
+def grid_coordinate_fields(h, w):
+	from numpy import meshgrid
+	B = grid_incidence(h, w);
+	x, y = meshgrid(range(w), range(h))
+	dx = B @ x.flatten()
+	dy = B @ y.flatten()
+	return dx, dy
+
+x = image_read("x.png")
+h,w = x.shape
+x = x.flatten()
+
+dx, dy = grid_coordinate_fields(h, w)
+
+dy.max()
+
+
+
+dx.shape
+
+# Let us compute the gradient of the image and look at each component of the gradient
+B = grid_incidence(h, w)
+C = abs(B)/2
+
+gx = C.T @ (dx * (B @ x))
+gy = C.T @ (dy * (B @ x))
+
+image_render("x_gx.png", 127+2*gx    .reshape(h,w))
+image_render("x_gy.png", 127+2*gy    .reshape(h,w))
+
+
+
+
+
+
 
 # ## Linear differential equations
 

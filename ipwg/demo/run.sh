@@ -16,7 +16,7 @@ done
 
 # Run and render the notebook
 #quarto render main.ipynb -o output.html --execute $params
-jupytext a.py a.qmd
+jupytext a.py --to qmd
 quarto render a.qmd -o output.html
 
 # create an iframe for the IPOL page

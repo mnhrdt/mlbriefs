@@ -2,18 +2,13 @@
 
 set -eu
 
-notebook_path=$bin/$1
-
 # copy the notebook to the execution directory so that it can be updated by quarto
-cp $notebook_path main.ipynb
+cp $bin/ipwg/main.ipynb .
 
 
-### fetch parameters
-# Always provide the working directory
-params="-P SRCDIR:$(dirname $notebook_path)"
-# Then add remaining parameters
-# Start from the second argument: $1 is the notebook path
-for p in "${@:2}"; do
+# fetch parameters
+params=""
+for p in "${@}"; do
     params="$params -P $p"
 done
 

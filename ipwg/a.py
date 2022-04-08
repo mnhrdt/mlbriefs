@@ -97,7 +97,7 @@ def image_render(f, x):
 # Let's try these functions with a trivial example:
 
 #hack
-x=image_read("image_0.png")
+x=image_read("input_0.png")
 image_write("x.png", x)
 
 x = image_read("x.png")        # load an image from current directory

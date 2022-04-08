@@ -96,6 +96,10 @@ def image_render(f, x):
 
 # Let's try these functions with a trivial example:
 
+#hack
+x=image_read("image_0.png")
+image_write("x.png", x)
+
 x = image_read("x.png")        # load an image from current directory
 h, w = x.shape                 # extract height and width (note the order)
 x[:,:w//2] = 0                 # paint the left side in black
@@ -249,8 +253,6 @@ ng = (gx**2 + gy**2)**0.5    # norm of the gradient (a simple edge detector)
 
 image_render("x_ng3.png", 3*ng.reshape(h,w))
 
-import iio
-x = iio.read("g_rgb.png")
 
 
 x.shape

@@ -235,17 +235,32 @@ dy.max()
 
 dx.shape
 
-# Let us compute the gradient of the image and look at each component of the gradient
-B = grid_incidence(h, w)
-C = abs(B)/2
+B = grid_incidence(h, w)   # gradient operator
+C = abs(B)/2               # centering operator (useful for dot products)
 
-gx = C.T @ (dx * (B @ x))
-gy = C.T @ (dy * (B @ x))
+g = B @ x              # gradient of the image
+gx = C.T @ (dx * g)    # x-component of g (dot product of dx and g)
+gy = C.T @ (dy * g)    # y-component of g (dot product of dy and g)
 
 image_render("x_gx.png", 127+2*gx    .reshape(h,w))
 image_render("x_gy.png", 127+2*gy    .reshape(h,w))
 
+ng = (gx**2 + gy**2)**0.5    # norm of the gradient (a simple edge detector)
 
+image_render("x_ng3.png", 3*ng.reshape(h,w))
+
+import iio
+x = iio.read("g_rgb.png")
+
+
+x.shape
+
+# +
+#rgb.reshape(h,w,3).shape
+
+# +
+#image_render("g_rgb.png", rgb.reshape(3,h,w))
+# -
 
 
 

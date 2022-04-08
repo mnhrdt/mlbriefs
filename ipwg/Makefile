@@ -11,6 +11,6 @@ default : $(HTM)
 clean   :        ; $(RM) $(QMD) $(HTM) $(NTB) x_*.png
 .PRECIOUS: $(QMD)
 
-deploy: $(SRC) a.ipynb
-	mv a.ipynb demo/ipwg/
+deploy: $(SRC) a.qmd
+	mv a.qmd demo/ipwg/
 	tar -C demo -zcvhf ../docs/ipwg.tar.gz ipwg

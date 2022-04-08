@@ -265,6 +265,13 @@ x.shape
 # -
 
 
+x = image_read("x.png")                            # load image
+h,w = x.shape                                      # extract dimensions
+x = x.flatten()                                    # flatten image into vector
+B = grid_incidence(h, w)                           # signed incidence matrix
+L = -B.T @ B                                       # laplacian matrix
+y = L @ x                                          # laplacian of the image
+image_render("x_lap.png", 127-3*y .reshape(h,w))   # show laplacian
 
 
 

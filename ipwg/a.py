@@ -1,4 +1,4 @@
-# # Image processing with graphs
+# # Image processing without graphs
 
 # A graph is a sparse matrix.  Thus, libraries for doing linear algebra are the
 # appropriate tool to deal with graphs.  In this notebook we show how to
@@ -273,6 +273,18 @@ L = -B.T @ B                                       # laplacian matrix
 y = L @ x                                          # laplacian of the image
 image_render("x_lap.png", 127-3*y .reshape(h,w))   # show laplacian
 
+
+def signed_rgb(x, s=100):
+	""" RGB rendering of a signed scalar image using a divergent palette """
+	from numpy import clip, fabs, dstack
+	r = 1 - clip(x/s, 0, 1)
+	g = 1 - clip(fabs(x/s), 0, 1)
+	b = 1 - clip(-x/s, 0, 1)
+	return (255*clip(dstack([r, g, b]), 0, 1)).astype(int)
+
+image_render("rgb_xlap.png", signed_rgb((E**6)*y,5e5).reshape(h,w,3))
+image_render("rgb_xgx.png", signed_rgb((E**6)*gx,5e5).reshape(h,w,3))
+image_render("rgb_xgy.png", signed_rgb((E**6)*gy,5e5).reshape(h,w,3))
 
 
 # ## Linear differential equations

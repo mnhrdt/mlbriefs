@@ -1,3 +1,17 @@
+# # Title of the notebook
+
+import iio
+from IPython.display import display,Image
+
+x = iio.read("f/barbara.png")
+
+x.shape
+
+# Some math $\int_\Omega d\omega=\int_{\partial\Omega}\omega$
+
+display(Image("f/barbara.png"))
+
+
 # ---
 # format:
 #     html:
@@ -13,18 +27,4 @@
 #     language: python
 #     name: python3
 # ---
-
-# # Title of the notebook
-
-import iio
-from IPython.display import display,Image
-
-x = iio.read("f/barbara.png")
-
-x.shape
-
-# Some math $\int_\Omega d\omega=\int_{\partial\Omega}\omega$
-
-display(Image("f/barbara.png"))
-
 

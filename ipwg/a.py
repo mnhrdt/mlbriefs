@@ -274,17 +274,18 @@ y = L @ x                                          # laplacian of the image
 image_render("x_lap.png", 127-3*y .reshape(h,w))   # show laplacian
 
 
-def signed_rgb(x, s=100):
+def signed_rgb(x, q=0.995):
 	""" RGB rendering of a signed scalar image using a divergent palette """
-	from numpy import clip, fabs, dstack
+	from numpy import clip, fabs, dstack, quantile
+	s = quantile(fabs(x), q)
 	r = 1 - clip(x/s, 0, 1)
 	g = 1 - clip(fabs(x/s), 0, 1)
-	b = 1 - clip(-x/s, 0, 1)
+	b = 1 + clip(x/s, -1, 0)
 	return (255*clip(dstack([r, g, b]), 0, 1)).astype(int)
 
-image_render("rgb_xlap.png", signed_rgb((E**6)*y,5e5).reshape(h,w,3))
-image_render("rgb_xgx.png", signed_rgb((E**6)*gx,5e5).reshape(h,w,3))
-image_render("rgb_xgy.png", signed_rgb((E**6)*gy,5e5).reshape(h,w,3))
+image_render("rgb_xlap.png", signed_rgb((E**6)*y).reshape(h,w,3))
+image_render("rgb_xgx.png", signed_rgb((E**6)*gx).reshape(h,w,3))
+image_render("rgb_xgy.png", signed_rgb((E**6)*gy).reshape(h,w,3))
 
 
 # ## Linear differential equations

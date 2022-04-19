@@ -5,7 +5,7 @@
 # implement some common operations in image processing using a graph formalism.
 # In this formalism, images are functions that assign a number to each vertex
 # of a grid graph.  Here the graph will always be a grid, but all the
-# operations can be defined over an arbitrary graph.
+# operations are defined as well over an arbitrary graph.
 #
 # This version of the notebook uses python/numpy.  There are other equivalent
 # versions with octave and julia.
@@ -19,8 +19,23 @@
 
 # $$m=H(W-1)+W(H-1)$$
 
-# The following function builds the signed *incidence matrix* of a $W\times H$
-# grid graph.  It is a matrix of $n$ columns and $m$ rows.
+# The grid graph of size $W\times H$ is the *graph product* of a path of length
+# $W$ with a path of length $H$.  The adjacency matrix of the grid is thus
+# obtained as the *Kronecker sum* of the adjacency matrices of each path, which
+# are offset diagonal matrices:
+
+def grid_adjacency(h, w):
+	""" Build the adjacency matrix of a WxH grid graph """
+	from scipy.sparse import eye, kronsum
+	x = eye(w, w, 1)                             # oriented path of length W
+	y = eye(h, h, 1)                             # oriented path of length H
+	G = kronsum(x, y)                            # graph product
+	A = G + G.T                                  # symmetrization
+	return A
+
+# The adjacency matrix is a square binary matrix of size $n$.
+# A similar construction builds the signed *incidence matrix* of a $W\times H$
+# grid graph.  It is a matrix of $n$ columns and $m$ rows:
 
 def grid_incidence(h, w):
 	""" Build the signed incidence matrix of a WxH grid graph """
@@ -32,17 +47,6 @@ def grid_incidence(h, w):
 	B = vstack([Bx, By])                         # union of all paths
 	return B
 
-# A similar construction builds the *adjacency matrix*, which is square of size
-# $n$.
-
-def grid_adjacency(h, w):
-	""" Build the adjacency matrix of a WxH grid graph """
-	from scipy.sparse import eye, kronsum
-	x = eye(w, w, 1)                             # oriented path of length W
-	y = eye(h, h, 1)                             # oriented path of length H
-	G = kronsum(x, y)                            # graph product
-	A = G + G.T                                  # symmetrization
-	return A
 
 # We will also construct the *Laplacian matrix* of the graph, defined as
 # $L=-B^\top B$.  There are many algebraic relationships between the Laplacian,

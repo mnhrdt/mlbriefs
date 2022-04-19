@@ -1,4 +1,19 @@
-# # Image processing with graphs
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     text_representation:
+#       extension: .py
+#       format_name: light
+#       format_version: '1.5'
+#       jupytext_version: 1.13.7
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# # Image processing without graphs
 
 # A graph is a sparse matrix.  Thus, libraries for doing linear algebra are the
 # appropriate tool to deal with graphs.  In this notebook we show how to
@@ -110,6 +125,35 @@ x[:,:w//2] = 0                 # paint the left side in black
 image_write("x_cut.png", x)    # save the modified image
 image_display("x.png")         # display original image
 image_display("x_cut.png")     # display modified image
+
+
+import PIL.Image
+import io
+import numpy
+
+f = io.BytesIO()
+
+I = PIL.Image.fromarray(x.astype(numpy.uint8))
+
+I.save(f, "jpeg")
+
+ff = f.getvalue()
+
+import base64
+
+fff = base64.b64encode(ff).decode()
+
+sf = f"<img src=\"data:image/jpeg;base64,{fff}&#10;\"/>"
+
+import IPython.display
+
+IPython.display.display(IPython.display.HTML(sf))
+
+
+def image_urlencoded(x):
+	import PIL.Image, io, numpy, base64, IPython.display
+
+
 
 
 # ## Morphological operators
@@ -276,6 +320,51 @@ B = grid_incidence(h, w)                           # signed incidence matrix
 L = -B.T @ B                                       # laplacian matrix
 y = L @ x                                          # laplacian of the image
 image_render("x_lap.png", 127-3*y .reshape(h,w))   # show laplacian
+
+
+def signed_rgb(x, q=0.995):
+	""" RGB rendering of a signed scalar image using a divergent palette """
+	from numpy import clip, fabs, dstack, quantile
+	s = quantile(fabs(x), q)
+	r = 1 - clip(x/s, 0, 1)
+	g = 1 - clip(fabs(x/s), 0, 1)
+	b = 1 + clip(x/s, -1, 0)
+	return (255*clip(dstack([r, g, b]), 0, 1)).astype(int)
+
+image_render("rgb_xlap.png", signed_rgb((E**6)*y).reshape(h,w,3))
+image_render("rgb_xgx.png", signed_rgb((E**6)*gx).reshape(h,w,3))
+image_render("rgb_xgy.png", signed_rgb((E**6)*gy).reshape(h,w,3))
+
+def jpeg_urlencoded_img_tag(x):
+	from PIL.Image import fromarray
+	from io import BytesIO
+	from numpy import uint8
+	from base64 import b64encode
+	f = BytesIO()
+	fromarray(x.astype(uint8)).save(f, "jpeg")
+	s = b64encode(f.getvalue()).decode()
+	return f"<img src=\"data:image/jpeg;base64,{s}&#10;\"/>"
+
+def image_show(x):
+	from IPython.display import display, HTML
+	s = jpeg_urlencoded_img_tag(x)
+	display(HTML(s))
+	return
+
+def image_show2(x):
+	from PIL.Image import fromarray
+	from numpy import uint8
+	return fromarray(x.astype(uint8))
+
+x.shape
+
+
+image_show(image_read("x_lap.png"))
+
+
+
+
+
 
 
 

@@ -1,19 +1,4 @@
-# ---
-# jupyter:
-#   jupytext:
-#     cell_metadata_filter: -all
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.13.7
-#   kernelspec:
-#     display_name: Python 3
-#     language: python
-#     name: python3
-# ---
-
-# # Image processing without graphs
+# # Image processing with graphs
 
 # A graph is a sparse matrix.  Thus, libraries for doing linear algebra are the
 # appropriate tool to deal with graphs.  In this notebook we show how to

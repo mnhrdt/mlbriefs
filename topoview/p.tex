@@ -54,6 +54,7 @@
 % make everything monospace
 \renewcommand*\familydefault{\ttdefault}
 
+%%RUN_VERBATIMS sh
 \begin{document}
 
 
@@ -65,7 +66,7 @@ VISUALIZATION OF TOPOGRAPHIC MAPS\\
 %lluc meinhardt
 
 \tiny
-\begin{verbatim}
+ \begin{verbatim}
 0. History, context
 0.1. What is a TM, DEM, DSM, DTM
 0.2. History of map colorization
@@ -116,6 +117,8 @@ History of map colorization\\
 \begin{frame}
 Fuji 3d photos, identify landmarks\\
 ================
+
+% https://earth.google.com/web/@35.43358604,138.66641909,1286.03715416a,6726.59176094d,35y,115.23907572h,78.15012473t,0r
 \end{frame}
 
 \begin{frame}
@@ -128,19 +131,49 @@ Symbolic-based methods\\
 ================
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 Palette (gray, color)\\
 ================
+
+%SCRIPT palette 0 4000 gray f/fuji.npy f/fuji_gray.png -l f/fuji_gray_l.png
+%SCRIPT palette 0 4000 dem f/fuji.npy f/fuji_dem.png -l f/fuji_dem_l.png
+%SCRIPT palette 0 4000 fs/Default.gpl f/fuji.npy f/fuji_def.png -l f/fuji_def_l.png
+%SCRIPT palette 0 4000 botw f/fuji.npy f/fuji_botw.png -l f/fuji_botw_l.png
+
+%SCRIPT plambda f/fuji.npy "x 270 + 360 / 1 fmod 360 *  1 1 rgb hsv2rgb 255 *"|blur C 1|qauto -i - f/fuji_franges.png
+
+%SCRIPT plambda f/fuji.npy 'x,n not x 21 < or 255 *'|morsi square opening - f/fuji_water.png
+%SCRIPT plambda f/fuji_water.png f/fuji_dem.png "x not y 20 100 255 rgb if" -o f/fuji_dem_water.png
+\only<1>{\includegraphics[width=0.9\textwidth]{f/fuji_gray.png}%
+\includegraphics[width=0.1\textwidth]{f/fuji_gray_l.png}}%
+\only<2>{\includegraphics[width=0.9\textwidth]{f/fuji_def.png}%
+\includegraphics[width=0.1\textwidth]{f/fuji_def_l.png}}%
+\only<3>{\includegraphics[width=0.9\textwidth]{f/fuji_franges.png}}
+\only<4>{\includegraphics[width=0.9\textwidth]{f/fuji_dem.png}%
+\includegraphics[width=0.1\textwidth]{f/fuji_dem_l.png}}%
+\only<5>{\includegraphics[width=0.9\textwidth]{f/fuji_dem_water.png}%
+\includegraphics[width=0.1\textwidth]{f/fuji_dem_l.png}}%
+%\only<6>{\includegraphics[width=0.9\textwidth]{f/fuji_botw.png}%
+%\includegraphics[width=0.1\textwidth]{f/fuji_botw_l.png}}%
+
 \end{frame}
 
 \begin{frame}
 Level lines\\
 ================
+
+
 \end{frame}
 
 \begin{frame}
 Level lines + palette (zelda!)\\
 ================
+
+%SCRIPT plambda f/fuji.npy "200 / round 200 *" -o f/fuji_q.npy
+%SCRIPT palette 0 4000 botw f/fuji_q.npy f/fuji_q.png
+%SCRIPT morsi cross igradient f/fuji_q.npy | plambda f/fuji_q.png - 'x y not *'|plambda f/fuji_water.png - 'x not y 54 64 70 rgb if' -o f/fuji_zelda.png
+\includegraphics[width=0.9\textwidth]{f/fuji_zelda.png}%
+\includegraphics[width=0.1\textwidth]{f/fuji_botw_l.png}%
 \end{frame}
 
 \begin{frame}
@@ -177,6 +210,13 @@ Lambertian shading (gouraud, + linear approximation)\\
 \begin{frame}
 Clear sky shading (ao sampling, + linear approximation)\\
 ================
+
+%SCRIPT periodize < f/pteri.tif|fft|plambda ':R .7 ^ *'|ifft|imhalve|qeasy -140 40 - f/pteri_linssao.png
+
+%%SCRIPT CX=1; for i in {1..1000}; do SRAND=$i plambda -c "randu randu randu vec 2 * 1 - >1 <1 vnorm 1 > <1 dup vnorm / nan if" ; done|grep -v nan|grep -v '^-'|awk '{print $2 " "  $3 " " $1 }'|while read p q r; do echo shadowcast -M $p $q $r f/pteri.tif /tmp/teri_shey_${CX}.png ; CX=$[CX+1] ; done|parallel -j 8
+%SCRIPT veco avg /tmp/teri_shey_* | qauto -p 1 - f/pteri_ao.png
+\only<1>{\includegraphics[width=\textwidth]{f/pteri_linssao.png}}%
+\only<2>{\includegraphics[width=\textwidth]{f/pteri_ao.png}}%
 \end{frame}
 
 \begin{frame}

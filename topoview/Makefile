@@ -3,9 +3,10 @@ PDF  = $(shell ls *.tex | sed 's/\.tex/.pdf/')
 pdf: $(PDF)
 
 %.pdf : %.tex
-	#./.process_verbatims $<
-	grep ^%SCRIPT $< | cut -c9- | sh
+	grep ^%SCRIPT $< | cut -c9- | bash
 	cat $< | pdflatexfilter > $@
+
+p:;cat p.tex | pdflatexfilter > p.pdf
 
 clean :
 	$(RM) $(PDF) f/*.png

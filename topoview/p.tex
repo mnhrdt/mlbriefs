@@ -396,16 +396,28 @@ DENSITY OF LEVEL LINES = SLOPE\\
 \end{frame}
 
 \begin{frame}
-MEANING OF DERIVATIVES\\
-======================
+FUNCTIONS AND DERIVATIVES\\
+=========================
 
-$\color{blue}u(x,y)$ height at point $(x,y)$
-
-$\color{blue}u(x,y)=c$ level line at height~$c$
-
-$\color{blue}\|\nabla u\|=\sqrt{u_x^2+u_y^2}$ slope
-
-$\color{blue}\frac{\nabla u}{\|\nabla u\|}$ direction of maximum ascent
+\vfill\tiny
+\begin{tabular}{l|l|l}
+	expression & meaning(surface) & meaning(level lines)\\
+	&&\\
+	\hline
+	&&\\
+$\color{blue}u(x,y)$ & height at point $(x,y)$ & \\
+	&&\\
+$\color{blue}u(x,y)=c$ &  & level line at height~$c$  \\
+	&&\\
+$\color{blue}\|\nabla u\|=\sqrt{u_x^2+u_y^2}$ & slope & density\\
+	&&\\
+$\color{blue}{\nabla u}/{\|\nabla u\|}$ & direction of maximum ascent & normal \\
+	&&\\
+$\color{blue}\Delta u = u_{xx} + u_{yy}$ & laplacian & ``convexity'' \\
+	&&\\
+$\color{blue}\mathrm{div}({\nabla u}/{\|\nabla u\|})$ & & curvature of level lines \\
+\end{tabular}
+\vfill
 \end{frame}
 
 \begin{frame}
@@ -503,28 +515,76 @@ different lighting models (for a single light source)
 \end{frame}
 
 \begin{frame}
-Shadows, shading, reflections\\
+SHADOWS, SHADING, REFLECTIONS\\
 =============================
 
 \includegraphics[width=\linewidth]{fs/lighting.jpg}
 \end{frame}
 
 \begin{frame}
-Shadows\\
-================
+SHADOWS\\
+=======
 
 %SCRIPT plambda f/fuji.npy "10 /" -o f/fuji_p.npy
 %SCRIPT shadowcast 0.58 0.81 0    -M f/fuji_p.npy f/fuji_shad1.png &
-%SCRIPT shadowcast 0.18 0.26 2.93 -M f/fuji_p.npy f/fuji_shad2.png &
+%SCRIPT shadowcast 0.58 0.81 0.5  -M f/fuji_p.npy f/fuji_shad2.png &
+%SCRIPT shadowcast 0.58 0.81 1    -M f/fuji_p.npy f/fuji_shad3.png &
+%SCRIPT shadowcast 0.58 0.81 1.5  -M f/fuji_p.npy f/fuji_shad4.png &
+%SCRIPT shadowcast 0.58 0.81 2    -M f/fuji_p.npy f/fuji_shad5.png &
+%SCRIPT shadowcast 0.18 0.26 2.93 -M f/fuji_p.npy f/fuji_shad6.png &
+%SCRIPT shadowcast 0.18 0.26 4.93 -M f/fuji_p.npy f/fuji_shad7.png &
+%SCRIPT shadowcast -0.26 0.18 2.00 -M f/fuji_p.npy f/fuji_shad8.png &
+%SCRIPT shadowcast -0.36 0.18 0.70 -M f/fuji_p.npy f/fuji_shad9.png &
+%SCRIPT shadowcast -0.46 0.18 0.60 -M f/fuji_p.npy f/fuji_shad10.png &
 
-\only<1>{\includegraphics[width=\linewidth]{f/fuji_shad1.png}}%
-\only<2>{\includegraphics[width=\linewidth]{f/fuji_shad2.png}}%
+\only<1>{\includegraphics[width=0.9\linewidth]{f/fuji_shad1.png}\tiny1/10}%
+\only<2>{\includegraphics[width=0.9\linewidth]{f/fuji_shad2.png}\tiny2/10}%
+\only<3>{\includegraphics[width=0.9\linewidth]{f/fuji_shad3.png}\tiny3/10}%
+\only<4>{\includegraphics[width=0.9\linewidth]{f/fuji_shad4.png}\tiny4/10}%
+\only<5>{\includegraphics[width=0.9\linewidth]{f/fuji_shad5.png}\tiny5/10}%
+\only<6>{\includegraphics[width=0.9\linewidth]{f/fuji_shad6.png}\tiny6/10}%
+\only<7>{\includegraphics[width=0.9\linewidth]{f/fuji_shad7.png}\tiny7/10}%
+\only<8>{\includegraphics[width=0.9\linewidth]{f/fuji_shad8.png}\tiny8/10}%
+\only<9>{\includegraphics[width=0.9\linewidth]{f/fuji_shad9.png}\tiny9/10}%
+\only<10>{\includegraphics[width=0.9\linewidth]{f/fuji_shad10.png}\tiny10/10}%
 
 \end{frame}
 
 \begin{frame}
-Lambertian shading (gouraud, + linear approximation)\\
-================
+LAMBERTIAN SHADING (LINEAR APPROXIMATION)\hfill$\color{blue}\mathrm{sun}=(\alpha,\beta,\gamma)$\\
+=========================================
+
+%SCRIPT SHADOWX=0.58 SHADOWY=0.81  plambda f/fuji_p.npy "x,Sf"|qauto -p 1 - f/fuji_lam1.png &
+%SCRIPT SHADOWX=0.18 SHADOWY=0.26  plambda f/fuji_p.npy "x,Sf"|qauto -p 1 - f/fuji_lam2.png &
+%SCRIPT SHADOWX=-0.26 SHADOWY=0.18 plambda f/fuji_p.npy "x,Sf"|qauto -p 1 - f/fuji_lam3.png &
+%SCRIPT SHADOWX=-0.36 SHADOWY=0.18 plambda f/fuji_p.npy "x,Sf"|qauto -p 1 - f/fuji_lam4.png &
+%SCRIPT SHADOWX=-0.46 SHADOWY=0.18 plambda f/fuji_p.npy "x,Sf"|qauto -p 1 - f/fuji_lam5.png &
+
+Gouraud: $\color{blue}I = \frac{\alpha u_x + \beta u_y + \gamma}{\sqrt{1+u_x^2+u_y^2}}$\hfill
+Linearized: $\color{blue}I = \alpha u_x + \beta u_y + \gamma$
+\only<1>{\includegraphics[width=0.9\linewidth]{f/fuji_lam1.png}\tiny1/5}%
+\only<2>{\includegraphics[width=0.9\linewidth]{f/fuji_lam2.png}\tiny2/5}%
+\only<3>{\includegraphics[width=0.9\linewidth]{f/fuji_lam3.png}\tiny3/5}%
+\only<4>{\includegraphics[width=0.9\linewidth]{f/fuji_lam4.png}\tiny4/5}%
+\only<5>{\includegraphics[width=0.9\linewidth]{f/fuji_lam5.png}\tiny5/5}%
+
+\end{frame}
+
+%\begin{frame}
+%LAMBERTIAN SHADING (LINEAR APPROXIMATION)\hfill$\color{blue}\mathrm{sun}=(\alpha,\beta,\gamma)$\\
+%=========================================
+%\begin{frame}
+
+\begin{frame}
+SPECULAR SHADING (PHONG)\\
+========================\\
+$\color{blue}g_\sigma(r\cdot v)\qquad\qquad
+\color{blue}r = 2(s\cdot n)n-s$\\
+{\tiny v=point of view, s=sun direction, n=surface normal}
+
+\includegraphics[width=0.5\linewidth]{fs/phong.jpeg}\\
+\includegraphics[width=0.9\linewidth]{fs/phongonly.png}
+
 \end{frame}
 
 \begin{frame}
@@ -539,39 +599,57 @@ Clear sky shading (ao sampling, + linear approximation)\\
 \only<2>{\includegraphics[width=\textwidth]{f/pteri_ao.png}}%
 \end{frame}
 
-\begin{frame}
-Specular shading (phong)\\
-================
-\end{frame}
 
 \begin{frame}
 SAR direct model\\
 ================
+
+%SCRIPT plambda f/fuji.npy '30 /'|sarsim -89|qauto -p 1 - f/fuji_sar89.png &
+%SCRIPT plambda f/fuji.npy '30 /'|sarsim -60|qauto -p 1 - f/fuji_sar60.png &
+%SCRIPT plambda f/fuji.npy '30 /'|sarsim -45|qauto -p 1 - f/fuji_sar45.png &
+%SCRIPT plambda f/fuji.npy '30 /'|sarsim -30|qauto -p 1 - f/fuji_sar30.png &
+%SCRIPT plambda f/fuji.npy '10 /'|sarsim -30|qauto -p 1 - f/fuji_sar10.png &
+%SCRIPT plambda f/fuji.npy '5 /'|sarsim -30|qauto -p 1 - f/fuji_sar5.png &
+
+\only<1>{\includegraphics[width=\textwidth]{f/fuji_sar89.png}\tiny89}%
+\only<2>{\includegraphics[width=\textwidth]{f/fuji_sar60.png}\tiny60}%
+\only<3>{\includegraphics[width=\textwidth]{f/fuji_sar45.png}\tiny45}%
+\only<4>{\includegraphics[width=\textwidth]{f/fuji_sar30.png}\tiny30}%
+\only<5>{\includegraphics[width=\textwidth]{f/fuji_sar10.png}\tiny10}%
+\only<1>{\includegraphics[width=\textwidth]{f/fuji_sar5.png}\tiny5}%
 \end{frame}
 
 \begin{frame}
-Uses and fancy things\\
-================
+FANCIER THINGS\\
+==============\\
+\small
+combine several models (palette, diffuse, shadows, clearsyky)
+\only<1>{\includegraphics[width=0.8\textwidth]{fs/reunion_combi1}}%
+
 \end{frame}
 
-\begin{frame}
-To observe defects, understand geometry, etc\\
-================
-\end{frame}
+%\begin{frame}
+%To observe defects, understand geometry, etc\\
+%================
+%\end{frame}
+%
+%\begin{frame}
+%Combined methods: tinted hillshade with level-lines\\
+%================
+%\end{frame}
+%
+%\begin{frame}
+%As a direct model for several famous inverse problems\\
+%================
+%\end{frame}
 
 \begin{frame}
-Combined methods: tinted hillshade with level-lines\\
-================
-\end{frame}
+TAKE HOME MESSAGE\\
+=================
 
-\begin{frame}
-As a direct model for several famous inverse problems\\
-================
-\end{frame}
+Bring your own hillshader
 
-\begin{frame}
-Take home message: do not show "north up" in optical images\\
-================
+Light source is always up, never down
 \end{frame}
 
 

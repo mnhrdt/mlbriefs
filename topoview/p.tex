@@ -157,6 +157,13 @@ History of map colorization\\
 \end{frame}
 
 \begin{frame}
+MODERN CARTOGRAPHY\\
+==================
+
+\includegraphics[width=\linewidth]{fs/satire.png}
+\end{frame}
+
+\begin{frame}
 Fuji 3d photos, identify landmarks\\
 ================
 
@@ -374,7 +381,13 @@ Shadows, shading, reflections\\
 Shadows\\
 ================
 
-%SCRIPT
+%SCRIPT plambda f/fuji.npy "10 /" -o f/fuji_p.npy
+%SCRIPT shadowcast 0.58 0.81 0    -M f/fuji_p.npy f/fuji_shad1.png &
+%SCRIPT shadowcast 0.18 0.26 2.93 -M f/fuji_p.npy f/fuji_shad2.png &
+
+\only<1>{\includegraphics[width=\linewidth]{f/fuji_shad1.png}}%
+\only<2>{\includegraphics[width=\linewidth]{f/fuji_shad2.png}}%
+
 \end{frame}
 
 \begin{frame}

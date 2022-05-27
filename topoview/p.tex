@@ -584,7 +584,7 @@ $\color{blue}g_\sigma(r\cdot v)\qquad\qquad
 Clear sky shading (ao sampling, + linear approximation)\\
 ================
 
-%SCRIPT periodize < f/pteri.tif|fft|plambda ':R .7 ^ *'|ifft|imhalve|qeasy -140 40 - f/pteri_linssao.png
+%SCRIPT periodize < f/pteri.tif|fft|plambda ':R .7 ^ *'|fft -1|imhalve|qeasy -140 40 - f/pteri_linssao.png
 
 %%SCRIPT CX=1; for i in `seq 1 1000`; do SRAND=$i plambda -c "randu randu randu vec 2 * 1 - >1 <1 vnorm 1 > <1 dup vnorm / nan if" ; done|grep -v nan|grep -v '^-'|awk '{print $2 " "  $3 " " $1 }'|while read p q r; do echo shadowcast -M $p $q $r f/pteri.tif /tmp/teri_shey_${CX}.png ; CX=$[CX+1] ; done|parallel -j 8
 %SCRIPT veco avg /tmp/teri_shey_* | qauto -p 1 - f/pteri_ao.png

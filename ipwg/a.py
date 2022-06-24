@@ -86,7 +86,7 @@ def image_write(f, x):
 	return
 
 def image_display(f):
-	""" Inline display the image from filename "f" into a numpy array """
+	""" Inline display the image from filename "f" """
 	import IPython.display
 	s = f"<div><p><img src=\"{f}\" /> {f}</p></div>"
 	IPython.display.display(IPython.display.HTML(s))
@@ -112,33 +112,21 @@ image_display("x.png")         # display original image
 image_display("x_cut.png")     # display modified image
 
 
-import PIL.Image
-import io
-import numpy
 
-f = io.BytesIO()
+def image_show(x):
+	""" Show a numpy array "x" as an image, without using any file """
+	import io, numpy, PIL.Image, base64, IPython.display
+	f = io.BytesIO()
+	I = PIL.Image.fromarray(x.astype(numpy.uint8))
+	I.save(f, "jpeg")
+	IPython.display.display(IPython.display.HTML(
+	                f"""<img src=\"data:image/jpeg;base64,{
+	                        base64.b64encode(f.getvalue()).decode()
+	                }&#10;\"/>"""
+	        ))
 
-I = PIL.Image.fromarray(x.astype(numpy.uint8))
-
-I.save(f, "jpeg")
-
-ff = f.getvalue()
-
-import base64
-
-fff = base64.b64encode(ff).decode()
-
-sf = f"<img src=\"data:image/jpeg;base64,{fff}&#10;\"/>"
-
-import IPython.display
-
-IPython.display.display(IPython.display.HTML(sf))
-
-
-def image_urlencoded(x):
-	import PIL.Image, io, numpy, base64, IPython.display
-
-
+x = image_read("x.png")  # load an image from current directory
+image_show(255-x)        # display the negative image
 
 
 # ## Morphological operators
@@ -159,11 +147,13 @@ A = grid_adjacency(h, w)
 # Now, let's be silly: what happens when we apply $A$ to $x$ ?
 
 y = A @ x
-image_render("x_A.png", y.reshape(h, w))
+image_render("x_A.png", y.reshape(h, w)/4)
 
 # The result is a bit difficult to interpret... the image looks much brighter
 # and maybe a bit blurry.
 
+
+image_show(y.reshape(h,w)/4)
 
 # ### Morphology of binary data
 

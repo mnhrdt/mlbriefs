@@ -39,8 +39,8 @@
 
 % disable headings, set slide numbers in green
 \mode<all>\setbeamertemplate{navigation symbols}{}
-%\defbeamertemplate*{footline}{pagecount}{\leavevmode\hfill\color{darkgreen}
-%   \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}\vskip0pt}
+\defbeamertemplate*{footline}{pagecount}{\leavevmode\hfill\color{darkgreen}
+   \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}\vskip0pt}
 
 %% select red color for strikethrough
 \makeatletter
@@ -64,7 +64,7 @@ IMPLICIT IMAGE MODELS OF CLASSICAL DENOISERS\hfill{\footnotesize{\color{gray}mnh
 Any denoiser contains an ``implicit image prior''.\\
 How can we can extract images from it?
 
-{\color{gray}Kadkhodaie--Simoncelli 2021}\\
+{\color{gray}Kadkhodaie-Simoncelli 2021}\\
 \includegraphics[width=0.7\linewidth]{ks.png}
 
 %\vfill
@@ -81,6 +81,34 @@ How can we can extract images from it?
 	Denoiser = DCNN (faces)
 \end{tabular}
 
+\end{frame}
+
+\begin{frame}
+IMPLICIT IMAGE MODELS OF CLASSICAL DENOISERS
+============================================
+
+%Computed with current code:
+Particular cases of Kadkhodaie-Simoncelli dynamics:
+
+\begin{tabular}{lll}
+	\includegraphics[width=0.31\textwidth]{out_perlin.png} &
+	\includegraphics[width=0.31\textwidth]{out_mcm.png} &
+	\includegraphics[width=0.31\textwidth]{out_ffdnet.png} \\
+	gausssian blur &
+	median filter &
+	ffdnet \\
+	(perlin noise) &
+	(mcm) &
+	(quantization bug) \\
+\end{tabular}
+
+\end{frame}
+
+\begin{frame}
+SUBPRODUCT: PYTHON INTERFACE TO IPOL ALGORITHMS
+===============================================
+
+\includegraphics[height=0.9\textheight]{clipolcollab.png}
 \end{frame}
 
 

@@ -88,18 +88,23 @@ IMPLICIT IMAGE MODELS OF CLASSICAL DENOISERS
 ============================================
 
 %Computed with current code:
-Particular cases of Kadkhodaie-Simoncelli dynamics:
+%Particular cases of Kadkhodaie-Simoncelli dynamics:
 
+\tiny
 \begin{tabular}{lll}
 	\includegraphics[width=0.31\textwidth]{out_perlin.png} &
 	\includegraphics[width=0.31\textwidth]{out_mcm.png} &
+	\includegraphics[width=0.31\textwidth]{out_dct.png} \\
+	gausssian blur (perlin noise) &
+	median filter (mcm) &
+	dct denoising \\
+	&&\\
+	\includegraphics[width=0.31\textwidth]{out_nlm0.png} &
+	\includegraphics[width=0.31\textwidth]{out_nlbayes.png} &
 	\includegraphics[width=0.31\textwidth]{out_ffdnet.png} \\
-	gausssian blur &
-	median filter &
+	non-local means (nl diffusion) &
+	non-local bayes &
 	ffdnet \\
-	(perlin noise) &
-	(mcm) &
-	(quantization bug) \\
 \end{tabular}
 
 \end{frame}

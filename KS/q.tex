@@ -126,13 +126,159 @@ CONTEXT: GTTIS ABOUT DIFFUSION MODELS\\
 \end{frame}
 
 \begin{frame}
-CONTEXT: THE BASIC IDEA (1)\\
-===========================
+CONTEXT: THE BASIC IDEA\\
+=======================
 
+\only<1>{
 \vfill
 \includegraphics[width=\linewidth]{f/gobrrr.png}
-\vfill
+\vfill}\only<2-3>{
+{\color{gray}Kadkhodaie-Simoncelli 2021}
+
+\includegraphics[width=0.9\linewidth]{ks.png}
+}\only<3>{
+	\vfill
+\tiny
+\begin{tabular}{lll}
+	\includegraphics[height=0.18\textheight]{somiters3b.png} &
+	\includegraphics[height=0.18\textheight]{songermon1b.png} &
+	\includegraphics[height=0.18\textheight]{songermon1a.png} \\
+	Denoiser = median &
+	Denoiser = DCNN (generic) &
+	Denoiser = DCNN (faces)
+\end{tabular}
+}
 \end{frame}
+
+
+\begin{frame}
+OUTLINE\\
+=======
+
+\vfill
+
+1. Implicit image priors by {\bf iterative denoising}\\
+$\ \quad${\color{gray}($\approx$ 10min)}
+
+2. Application to {\bf linear inverse problems}\\
+$\ \quad${\color{gray}($\approx$ 5min)}
+
+3. Colophon: implementation details\\
+$\ \quad${\color{gray}($\approx$ 5min)}
+
+\vfill
+
+\end{frame}
+
+
+% 1. iteration of denoisers
+\begin{frame}%
+
+\vfill
+\begin{center}
+\Huge
+--1--\\Iteration of Denoisers
+\end{center}
+\vfill
+\small
+\centering
+{And how each denoiser defines an implicit image prior}
+\end{frame}
+
+
+% 1.0 goal: understand the normalizations in K-S algorithm
+
+% 1.1 what happens if we denoise an image iteratively?
+% experiment using gaussian blur, without normalization
+% experiment using gaussian blur, with normalization
+% experiment using median filter, with normalization
+
+% 1.2. review ks algorithm
+
+% 1.3. algorithm written in terms of residual denoising
+% alias X='plambda ``x x,V9 rot - 1 * x +'''
+% alias X='plambda ``x,M9 x - 0.9 * x +'''
+% plambda zero:128x128 randu|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|ntiply 10|d
+% cat barbara.png|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|ntiply 10|d
+
+% 1.4. link with heat equation
+
+% 1.5. further links: moisan image iterative filtering, alvarez etal
+
+% 1.6. recall main result of alvarez etal
+
+% 1.7. interpretation of other steps in KS algorithm
+
+% 1.8. experiments with various versions of parameters, classical denoisers
+
+% 1.9. slightly fancier denoisers
+
+% 1.10. the ks notebook
+
+
+
+
+
+% 2. linear inverse problems
+\begin{frame}%
+
+\vfill
+\begin{center}
+\Huge
+--2--\\Linear Inverse Problems
+\end{center}
+\vfill
+\small
+\centering
+{And how can we solve them using a denoiser}
+\end{frame}
+
+
+
+% 2.0. linear inverse problems: definition
+% 2.1. examples of linv problems: inpainting, spatial zoom-in, spectral zoom-in
+% 2.2. see the modified algorithm
+% 2.3. link with laplace inpainting
+% 2.4. link with tv inpainting
+% 2.5. examples with fancier denoisers
+
+
+% 2. linear inverse problems
+\begin{frame}%
+
+\vfill
+\begin{center}
+\Huge
+--3--\\Colophon
+\end{center}
+\vfill
+\small
+\centering
+{implementation details}
+\end{frame}
+
+
+% 3.0. colophon: implementation details
+% 3.1. show the ks source code (core algorithm)
+% 3.2. show the ks source code (main function, with denoiser selection)
+% 3.3. pip install ipol
+% 3.4. local ipol run
+% 3.5. idl and their shenanigans
+
+% ending:
+% k-s photos and links to presentations (IHES/simmons)
+%
+% Zahra Kadkhodaie
+% Flatiron-Wide Machine Learning
+% Flatiron Institute, June 2023
+% https://www.youtube.com/watch?v=24IukBNPJLw
+%
+% Eero Simoncelli
+% Photographic Image Priors in the Era of Machine Learning
+% IHES, April 2023 (in honor of Mallat's birthday)
+% https://www.youtube.com/watch?v=OiZFsn0_rjk
+
+
 
 
 

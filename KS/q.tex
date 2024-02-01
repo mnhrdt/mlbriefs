@@ -92,10 +92,10 @@ CONTEXT: GTTIS ABOUT DIFFUSION MODELS\\
 		{Diffusion Schrödinger Bridge and Generative Modeling}
 		\vspace{4em}
 
-		\includegraphics[width=\linewidth]{f/borto_shot1.png}
+		\includegraphics[width=\linewidth]{photos/borto_shot1.png}
 		\vspace{4em}
 
-		\includegraphics[width=\linewidth]{f/borto_shot2.png}
+		\includegraphics[width=\linewidth]{photos/borto_shot2.png}
 	\end{column}
 	\pause
 	\begin{column}{0.3\textwidth}\srcsize
@@ -104,13 +104,13 @@ CONTEXT: GTTIS ABOUT DIFFUSION MODELS\\
 		{Denoiser and Its Application Beyond Denoising}
 		\vspace{1em}
 
-		\includegraphics[width=\linewidth]{f/zhe_shot0.png}
+		\includegraphics[width=\linewidth]{photos/zhe_shot0.png}
 		\vspace{1em}
 
-		\includegraphics[width=\linewidth]{f/zhe_shot1.png}
+		\includegraphics[width=\linewidth]{photos/zhe_shot1.png}
 		\vspace{1em}
 
-		\includegraphics[width=\linewidth]{f/zhe_shot2.jpg}
+		\includegraphics[width=\linewidth]{photos/zhe_shot2.jpg}
 	\end{column}
 	\pause
 	\begin{column}{0.3\textwidth}\srcsize
@@ -119,7 +119,7 @@ CONTEXT: GTTIS ABOUT DIFFUSION MODELS\\
 		\vspace{4em}
 
 		\pause
-		\includegraphics[width=\linewidth]{f/compleat.jpg}
+		\includegraphics[width=\linewidth]{photos/compleat.jpg}
 	\end{column}
 \end{columns}
 \vfill
@@ -131,9 +131,12 @@ CONTEXT: THE BASIC IDEA\\
 
 \only<1>{
 \vfill
-\includegraphics[width=\linewidth]{f/gobrrr.png}
+\includegraphics[width=\linewidth]{photos/gobrrr.png}
 \vfill}\only<2-3>{
-{\color{gray}Kadkhodaie-Simoncelli 2021}
+	{\scriptsize
+{\bf Solving Linear Inverse Problems Using the Prior Implicit in a Denoiser}\\
+\vspace{-0.5em}{\color{gray}Kadkhodaie-Simoncelli 2021}
+}
 
 \includegraphics[width=0.9\linewidth]{ks.png}
 }\only<3>{
@@ -192,28 +195,334 @@ $\ \quad${\color{gray}($\approx$ 5min)}
 % experiment using gaussian blur, without normalization
 % experiment using gaussian blur, with normalization
 % experiment using median filter, with normalization
+\begin{frame}
+WHAT HAPPENS IF WE DENOISE AN IMAGE ITERATIVELY?\\
+================================================
+
+Denoiser = average of 9-neighborhood
+
+%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
+%SCRIPT ntiply 8 f/u.png f/u8.png
+%SCRIPT X() { blur square 3 ; }
+%SCRIPT cat f/u.png |X| ntiply 8 - f/Xu.png
+%SCRIPT cat f/u.png |X|X| ntiply 8 - f/XXu.png
+%SCRIPT cat f/u.png |X|X|X| ntiply 8 - f/XXXu.png
+%SCRIPT cat f/u.png |X|X|X|X|X|X|X|X|X|X| ntiply 8 - f/X10u.png
+
+\begin{tabular}{lllll}
+\includegraphics[width=0.18\linewidth]{f/u8.png}&
+\only<2->{\includegraphics[width=0.18\linewidth]{f/Xu.png}}&
+\only<3->{\includegraphics[width=0.18\linewidth]{f/XXu.png}}&
+\only<4->{\includegraphics[width=0.18\linewidth]{f/XXXu.png}}&
+\only<5->{\includegraphics[width=0.18\linewidth]{f/X10u.png}}\\
+\only<1->{u} &
+\only<2->{Xu} &
+\only<3->{XXu} &
+\only<4->{XXXu} &
+\only<5->{X10u} \\
+\end{tabular}
+
+\bigskip
+\small
+\color{blue}
+plambda zero:40x40 "randu 255 *" -o u\\
+alias X="blur square 3"
+
+\only<2->{cat u | X > Xu}$ $\\
+\only<3->{cat u | X | X > XXu}$ $\\
+\only<4->{cat u | X | X | X > XXXu}$ $\\
+\only<5->{cat u | X|X|X|X|X|X|X|X|X|X > X10u}$ $\\
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+WHAT HAPPENS IF WE DENOISE AN IMAGE ITERATIVELY?\\
+================================================
+
+Denoiser = gaussian blur of~$\sigma\!=\!2$
+
+%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
+%SCRIPT ntiply 8 f/u.png f/u8.png
+%SCRIPT Y() { blur gauss 2 ; }
+%SCRIPT cat f/u.png |Y| ntiply 8 - f/Yu.png
+%SCRIPT cat f/u.png |Y|Y| ntiply 8 - f/YYu.png
+%SCRIPT cat f/u.png |Y|Y|Y| ntiply 8 - f/YYYu.png
+%SCRIPT cat f/u.png |Y|Y|Y|Y|Y|Y|Y|Y|Y|Y| ntiply 8 - f/Y10u.png
+
+\begin{tabular}{lllll}
+\includegraphics[width=0.18\linewidth]{f/u8.png}&
+\only<2->{\includegraphics[width=0.18\linewidth]{f/Yu.png}}&
+\only<3->{\includegraphics[width=0.18\linewidth]{f/YYu.png}}&
+\only<4->{\includegraphics[width=0.18\linewidth]{f/YYYu.png}}&
+\only<5->{\includegraphics[width=0.18\linewidth]{f/Y10u.png}}\\
+\only<1->{u} &
+\only<2->{Yu} &
+\only<3->{YYu} &
+\only<4->{YYYu} &
+\only<5->{Y10u} \\
+\end{tabular}
+
+\bigskip
+\small
+\color{blue}
+plambda zero:40x40 "randu 255 *" -o u\\
+alias Y="blur gauss 2"
+
+\only<2->{cat u | Y > Yu}$ $\\
+\only<3->{cat u | Y | Y > YYu}$ $\\
+\only<4->{cat u | Y | Y | Y > YYYu}$ $\\
+\only<5->{cat u | Y|Y|Y|Y|Y|Y|Y|Y|Y|Y > Y10u}$ $\\
+
+
+\end{frame}
+
+
+
+\begin{frame}
+WHAT HAPPENS IF WE DENOISE AN IMAGE ITERATIVELY?\\
+================================================
+
+Denoiser = median filter of 9-neighborhood
+
+%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
+%SCRIPT ntiply 8 f/u.png f/u8.png
+%SCRIPT Z() { plambda 'x,M9' ; }
+%SCRIPT cat f/u.png |Z| ntiply 8 - f/Zu.png
+%SCRIPT cat f/u.png |Z|Z| ntiply 8 - f/ZZu.png
+%SCRIPT cat f/u.png |Z|Z|Z| ntiply 8 - f/ZZZu.png
+%SCRIPT cat f/u.png |Z|Z|Z|Z|Z|Z|Z|Z|Z|Z| ntiply 8 - f/Z10u.png
+
+\begin{tabular}{lllll}
+\includegraphics[width=0.18\linewidth]{f/u8.png}&
+\only<2->{\includegraphics[width=0.18\linewidth]{f/Zu.png}}&
+\only<3->{\includegraphics[width=0.18\linewidth]{f/ZZu.png}}&
+\only<4->{\includegraphics[width=0.18\linewidth]{f/ZZZu.png}}&
+\only<5->{\includegraphics[width=0.18\linewidth]{f/Z10u.png}}\\
+\only<1->{u} &
+\only<2->{Zu} &
+\only<3->{ZZu} &
+\only<4->{ZZZu} &
+\only<5->{Z10u} \\
+\end{tabular}
+
+\bigskip
+\small
+\color{blue}
+plambda zero:40x40 "randu 255 *" -o u\\
+alias Z="plambda x,M9"
+
+\only<2->{cat u | Z > Zu}$ $\\
+\only<3->{cat u | Z | Z > ZZu}$ $\\
+\only<4->{cat u | Z | Z | Z > ZZZu}$ $\\
+\only<5->{cat u | Z|Z|Z|Z|Z|Z|Z|Z|Z|Z > Z10u}$ $\\
+
+
+\end{frame}
+
+
+
+\begin{frame}
+ITERATIVE DENOISING WITH NORMALIZATION\\
+======================================
+
+"Denoiser": gaussian blur of~$\sigma\!=\!2$ {\color{red} with normalization}
+
+%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
+%SCRIPT ntiply 8 f/u.png f/u8.png
+%SCRIPT N() { blur gauss 2 | qauto -p 1 ; }
+%SCRIPT cat f/u.png |N| ntiply 8 - f/Nu.png
+%SCRIPT cat f/u.png |N|N| ntiply 8 - f/NNu.png
+%SCRIPT cat f/u.png |N|N|N| ntiply 8 - f/NNNu.png
+%SCRIPT cat f/u.png |N|N|N|N|N|N|N|N|N|N| ntiply 8 - f/N10u.png
+
+\begin{tabular}{lllll}
+\includegraphics[width=0.18\linewidth]{f/u8.png}&
+\only<2->{\includegraphics[width=0.18\linewidth]{f/Nu.png}}&
+\only<3->{\includegraphics[width=0.18\linewidth]{f/NNu.png}}&
+\only<4->{\includegraphics[width=0.18\linewidth]{f/NNNu.png}}&
+\only<5->{\includegraphics[width=0.18\linewidth]{f/N10u.png}}\\
+\only<1->{u} &
+\only<2->{Yu} &
+\only<3->{YYu} &
+\only<4->{YYYu} &
+\only<5->{Y10u} \\
+\end{tabular}
+
+\bigskip
+\small
+\color{blue}
+plambda zero:40x40 "randu 255 *" -o u\\
+alias Y="blur gauss 2 {\color{red}\bf | qauto}"
+
+\only<2->{cat u | Y > Yu}$ $\\
+\only<3->{cat u | Y | Y > YYu}$ $\\
+\only<4->{cat u | Y | Y | Y > YYYu}$ $\\
+\only<5->{cat u | Y|Y|Y|Y|Y|Y|Y|Y|Y|Y > Y10u}$ $\\
+
+
+\end{frame}
+
+
+
+\begin{frame}
+ITERATIVE DENOISING WITH NORMALIZATION\\
+======================================
+
+"Denoiser": median filter {\color{red} with normalization}
+
+%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
+%SCRIPT ntiply 8 f/u.png f/u8.png
+%SCRIPT T() { plambda x,M9 | qauto -p 1 ; }
+%SCRIPT cat f/u.png |T| ntiply 8 - f/Tu.png
+%SCRIPT cat f/u.png |T|T| ntiply 8 - f/TTu.png
+%SCRIPT cat f/u.png |T|T|T| ntiply 8 - f/TTTu.png
+%SCRIPT cat f/u.png |T|T|T|T|T|T|T|T|T|T| ntiply 8 - f/T10u.png
+
+\begin{tabular}{lllll}
+\includegraphics[width=0.18\linewidth]{f/u8.png}&
+\only<2->{\includegraphics[width=0.18\linewidth]{f/Tu.png}}&
+\only<3->{\includegraphics[width=0.18\linewidth]{f/TTu.png}}&
+\only<4->{\includegraphics[width=0.18\linewidth]{f/TTTu.png}}&
+\only<5->{\includegraphics[width=0.18\linewidth]{f/T10u.png}}\\
+\only<1->{u} &
+\only<2->{Zu} &
+\only<3->{ZZu} &
+\only<4->{ZZZu} &
+\only<5->{Z10u} \\
+\end{tabular}
+
+\bigskip
+\small
+\color{blue}
+plambda zero:40x40 "randu 255 *" -o u\\
+alias Z="plambda x,M9 {\color{red}\bf | qauto}"
+
+\only<2->{cat u | Z > Zu}$ $\\
+\only<3->{cat u | Z | Z > ZZu}$ $\\
+\only<4->{cat u | Z | Z | Z > ZZZu}$ $\\
+\only<5->{cat u | Z|Z|Z|Z|Z|Z|Z|Z|Z|Z > Z10u}$ $\\
+
+
+\end{frame}
+
+% 
+\begin{frame}\small
+THE SPIRIT OF A DENOISER\\
+========================
+
+Idea: each denoiser has an intrinsic ``texture'' of images that it produces by
+iteration.
+
+
+%gaussian=perlin
+
+%median filter=median blobs
+
+%SCRIPT X() { blur gauss 3 | qauto -f -p 0 ; }
+%SCRIPT Y() { morsi disk5.1 median | qauto -f -p 0 ; }
+%SCRIPT plambda zero:256x256 randg|X|X|X|X|X|X|X|X|X|X|qauto -p 0 - f/gX10.png
+%SCRIPT plambda zero:256x256 randg|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y|qauto -p 0 - f/gY10.png
+
+\begin{tabular}{ll}
+	\includegraphics[width=0.42\linewidth]{f/gX10.png}&
+	\includegraphics[width=0.42\linewidth]{f/gY10.png}\\
+\end{tabular}
+
+\vfill
+\small
+\color{blue}
+X() $\{$ blur gauss 3 | qauto ; $\}$ \\
+Y() $\{$ morsi disk5.1 median | qauto ; $\}$\\
+plambda zero:256x256 randg |X|X|X|X|X|X|X|X|X|X\\
+plambda zero:256x256 randg |Y|Y|Y|Y|Y|Y|Y|Y|Y|Y
+
+\end{frame}
+
+
 
 % 1.2. review ks algorithm
+\begin{frame}
+OVERVIEW OF KS ALGORITHM\\
+========================
+
+\vfill
+\includegraphics[width=\linewidth]{ks.png}
+\vfill
+
+\end{frame}
+
 
 % 1.3. algorithm written in terms of residual denoising
 % alias X='plambda ``x x,V9 rot - 1 * x +'''
 % alias X='plambda ``x,M9 x - 0.9 * x +'''
 % plambda zero:128x128 randu|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|ntiply 10|d
 % cat barbara.png|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|ntiply 10|d
+\begin{frame}
+DENOISING VS RESIDUAL DENOSING\\
+==============================
+
+\end{frame}
+
 
 % 1.4. link with heat equation
+\begin{frame}
+LINK WITH HEAT EQUATION\\
+=======================
+
+\end{frame}
+
 
 % 1.5. further links: moisan image iterative filtering, alvarez etal
+\begin{frame}
+LINK WITH OTHER PDE\\
+===================
+
+\end{frame}
+
 
 % 1.6. recall main result of alvarez etal
+\begin{frame}
+IMAGE PDE: GENERAL RESULT\\
+=========================
+
+\end{frame}
+
 
 % 1.7. interpretation of other steps in KS algorithm
+\begin{frame}
+OTHER STEPS IN THE KS ALGORITHM\\
+===============================
+
+\end{frame}
+
 
 % 1.8. experiments with various versions of parameters, classical denoisers
+\begin{frame}
+SOME EXPERIMENTS WITH VARIOUS PARAMETERS\\
+========================================
+
+\end{frame}
+
 
 % 1.9. slightly fancier denoisers
+\begin{frame}
+SLIGHTLY FANCIER DENOISERS\\
+==========================
+
+\end{frame}
+
 
 % 1.10. the ks notebook
+\begin{frame}
+FROM THE KS NOTEBOOK\\
+====================
+
+\end{frame}
+
 
 
 
@@ -236,11 +545,54 @@ $\ \quad${\color{gray}($\approx$ 5min)}
 
 
 % 2.0. linear inverse problems: definition
+\begin{frame}
+LINEAR INVERSE PROBLEMS : DEFINITION\\
+====================================
+
+\end{frame}
+
+\begin{frame}
+LINEAR INVERSE PROBLEMS : INTERPRETATION\\
+========================================
+
+\end{frame}
+
+
 % 2.1. examples of linv problems: inpainting, spatial zoom-in, spectral zoom-in
+\begin{frame}
+EXAMPLES OF LINEAR INVERSE PROBLEMS\\
+===================================
+
+\end{frame}
+
 % 2.2. see the modified algorithm
+\begin{frame}
+MODIFIED KS ALGORITHM\\
+=====================
+
+\end{frame}
+
 % 2.3. link with laplace inpainting
+\begin{frame}
+LINK WITH LAPLACE INPAINTING\\
+============================
+
+\end{frame}
+
 % 2.4. link with tv inpainting
+\begin{frame}
+LINK WITH TV INPAINTING\\
+=======================
+
+\end{frame}
+
 % 2.5. examples with fancier denoisers
+\begin{frame}
+EXAMPLES WITH FANCIER DENOISERS\\
+===============================
+
+\end{frame}
+
 
 
 % 2. linear inverse problems
@@ -260,10 +612,42 @@ $\ \quad${\color{gray}($\approx$ 5min)}
 
 % 3.0. colophon: implementation details
 % 3.1. show the ks source code (core algorithm)
+\begin{frame}
+SOURCE CODE OF THE KS ALGORITHM: {\bf CORE FUNCTION}\\
+==============================================
+
+\end{frame}
+
 % 3.2. show the ks source code (main function, with denoiser selection)
+\begin{frame}
+SOURCE CODE OF THE KS ALGORITHM: {\bf DENOISER SELECTION}\\
+===================================================
+
+
+\end{frame}
+
 % 3.3. pip install ipol
-% 3.4. local ipol run
+\begin{frame}
+PIP INSTALL IPOL\\
+================
+
+see local ipol run
+\end{frame}
+
+%% 3.4. local ipol run
+%\begin{frame}
+%a\\
+%=========================================
+%
+%\end{frame}
+
 % 3.5. idl and their shenanigans
+\begin{frame}
+IPOL DESCRIPTION LANGUAGE EXAMPLES\\
+==================================
+
+\end{frame}
+
 
 % ending:
 % k-s photos and links to presentations (IHES/simmons)
@@ -277,8 +661,36 @@ $\ \quad${\color{gray}($\approx$ 5min)}
 % Photographic Image Priors in the Era of Machine Learning
 % IHES, April 2023 (in honor of Mallat's birthday)
 % https://www.youtube.com/watch?v=OiZFsn0_rjk
+\begin{frame}
+REFERENCES\\
+==========
 
+\vfill
 
+\begin{tabular}{ll}
+	\includegraphics[width=0.4\linewidth]{photos/kadkhodaie2.jpg}&
+	\includegraphics[width=0.4\linewidth]{photos/simoncelli2.jpg}\\
+	Zahra Kadkhodaie & Eero Simoncelli \\
+\end{tabular}
+
+\vfill
+
+\scriptsize
+
+% Zahra Kadkhodaie
+%Flatiron-Wide Machine Learning\\
+{\bf Solving Linear Inverse Problems Using the Prior Implicit in a Denoiser}\\
+Flatiron Institute, June 2023\\
+{\color{blue}\url{https://www.youtube.com/watch?v=24IukBNPJLw}}
+
+% Eero Simoncelli
+{\bf Photographic Image Priors in the Era of Machine Learning}\\
+IHES, April 2023 (in honor of Mallat's birthday)\\
+{\color{blue}\url{https://www.youtube.com/watch?v=OiZFsn0_rjk}}\\
+
+\vfill
+
+\end{frame}
 
 
 

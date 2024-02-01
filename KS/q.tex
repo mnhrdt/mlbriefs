@@ -80,6 +80,36 @@ gtti 1/2/2024
 \end{verbatim}
 \end{frame}
 
+% recall gaussian noise and gaussian blur
+\begin{frame}[noframenumbering]
+
+	\vfill
+\begin{center}
+{\color{red}\Huge
+	WARNING!
+
+	Important distinction:
+}
+\end{center}
+	\vfill
+
+%SCRIPT plambda photos/gbarbsquare.png "randg 40 * +" -o f/gnoise.png
+%SCRIPT blur g 10  photos/gbarbsquare.png f/gblur.png
+
+\begin{tabular}{cc}%c}
+	%\includegraphics[width=0.3\linewidth]{photos/gbarbsquare.png}&
+	\includegraphics[width=0.46\linewidth]{f/gnoise.png}&
+	\includegraphics[width=0.46\linewidth]{f/gblur.png}\\
+	%input image &
+	\color{red} gaussian noise &%$\sigma=30$ &
+	\color{red} gaussian blur %/$\sigma=10$ \\
+\end{tabular}
+	\vfill
+\end{frame}
+
+
+
+
 \begin{frame}
 CONTEXT: GTTIS ABOUT DIFFUSION MODELS\\
 =====================================
@@ -237,9 +267,52 @@ alias X="blur square 3"
 \end{frame}
 
 
+\begin{frame}[noframenumbering]
+WHAT HAPPENS IF WE DENOISE AN IMAGE ITERATIVELY?\\
+================================================
+
+Denoiser = median filter of 9-neighborhood
+
+%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
+%SCRIPT ntiply 8 f/u.png f/u8.png
+%SCRIPT Z() { plambda 'x,M9' ; }
+%SCRIPT cat f/u.png |Z| ntiply 8 - f/Zu.png
+%SCRIPT cat f/u.png |Z|Z| ntiply 8 - f/ZZu.png
+%SCRIPT cat f/u.png |Z|Z|Z| ntiply 8 - f/ZZZu.png
+%SCRIPT cat f/u.png |Z|Z|Z|Z|Z|Z|Z|Z|Z|Z| ntiply 8 - f/Z10u.png
+
+\begin{tabular}{lllll}
+\includegraphics[width=0.18\linewidth]{f/u8.png}&
+\only<2->{\includegraphics[width=0.18\linewidth]{f/Zu.png}}&
+\only<3->{\includegraphics[width=0.18\linewidth]{f/ZZu.png}}&
+\only<4->{\includegraphics[width=0.18\linewidth]{f/ZZZu.png}}&
+\only<5->{\includegraphics[width=0.18\linewidth]{f/Z10u.png}}\\
+\only<1->{u} &
+\only<2->{Zu} &
+\only<3->{ZZu} &
+\only<4->{ZZZu} &
+\only<5->{Z10u} \\
+\end{tabular}
+
+\bigskip
+\small
+\color{blue}
+plambda zero:40x40 "randu 255 *" -o u\\
+alias Z="plambda x,M9"
+
+\only<2->{cat u | Z > Zu}$ $\\
+\only<3->{cat u | Z | Z > ZZu}$ $\\
+\only<4->{cat u | Z | Z | Z > ZZZu}$ $\\
+\only<5->{cat u | Z|Z|Z|Z|Z|Z|Z|Z|Z|Z > Z10u}$ $\\
 
 
-\begin{frame}
+\end{frame}
+
+
+
+
+%\begin{frame}
+\begin{frame}[noframenumbering]
 WHAT HAPPENS IF WE DENOISE AN IMAGE ITERATIVELY?\\
 ================================================
 
@@ -280,48 +353,6 @@ alias Y="blur gauss 2"
 
 \end{frame}
 
-
-
-\begin{frame}
-WHAT HAPPENS IF WE DENOISE AN IMAGE ITERATIVELY?\\
-================================================
-
-Denoiser = median filter of 9-neighborhood
-
-%SCRIPT plambda zero:40x40 "randu 255 *" -o f/u.png
-%SCRIPT ntiply 8 f/u.png f/u8.png
-%SCRIPT Z() { plambda 'x,M9' ; }
-%SCRIPT cat f/u.png |Z| ntiply 8 - f/Zu.png
-%SCRIPT cat f/u.png |Z|Z| ntiply 8 - f/ZZu.png
-%SCRIPT cat f/u.png |Z|Z|Z| ntiply 8 - f/ZZZu.png
-%SCRIPT cat f/u.png |Z|Z|Z|Z|Z|Z|Z|Z|Z|Z| ntiply 8 - f/Z10u.png
-
-\begin{tabular}{lllll}
-\includegraphics[width=0.18\linewidth]{f/u8.png}&
-\only<2->{\includegraphics[width=0.18\linewidth]{f/Zu.png}}&
-\only<3->{\includegraphics[width=0.18\linewidth]{f/ZZu.png}}&
-\only<4->{\includegraphics[width=0.18\linewidth]{f/ZZZu.png}}&
-\only<5->{\includegraphics[width=0.18\linewidth]{f/Z10u.png}}\\
-\only<1->{u} &
-\only<2->{Zu} &
-\only<3->{ZZu} &
-\only<4->{ZZZu} &
-\only<5->{Z10u} \\
-\end{tabular}
-
-\bigskip
-\small
-\color{blue}
-plambda zero:40x40 "randu 255 *" -o u\\
-alias Z="plambda x,M9"
-
-\only<2->{cat u | Z > Zu}$ $\\
-\only<3->{cat u | Z | Z > ZZu}$ $\\
-\only<4->{cat u | Z | Z | Z > ZZZu}$ $\\
-\only<5->{cat u | Z|Z|Z|Z|Z|Z|Z|Z|Z|Z > Z10u}$ $\\
-
-
-\end{frame}
 
 
 
@@ -368,7 +399,7 @@ alias Y="blur gauss 2 {\color{red}\bf | qauto}"
 
 
 
-\begin{frame}
+\begin{frame}[noframenumbering]
 ITERATIVE DENOISING WITH NORMALIZATION\\
 ======================================
 
@@ -450,8 +481,25 @@ OVERVIEW OF KS ALGORITHM\\
 ========================
 
 \vfill
-\includegraphics[width=\linewidth]{ks.png}
+\includegraphics[width=0.9\linewidth]{ks.png}\footnotesize
 \vfill
+\pause
+Simplified version (no jittering and all constants=1):
+
+\color{blue}
+\noindent\fbox{%
+	\begin{minipage}{0.8\textwidth}
+		{\bf Input:} Denoiser~$\color{red}D$,
+		stepsize~$\color{darkgreen}h$, starting noise~$\sigma_0$\\
+		{\bf Output:} Image~$y$\\
+$ $\\
+%	\parbox{0.5\textwidth}{%
+$y\leftarrow\mathcal{N}(127,\sigma_0)$\\
+$\mathrm{for}\ t=1,\ldots,T\ :$\\
+$\phantom{mmmm}y\leftarrow y + {\color{darkgreen}h} \left({\color{red}D}(y)-y\right)$\\
+$\mathrm{return}\ y$
+\end{minipage}
+}
 
 \end{frame}
 
@@ -462,33 +510,159 @@ OVERVIEW OF KS ALGORITHM\\
 % plambda zero:128x128 randu|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|ntiply 10|d
 % cat barbara.png|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|X|ntiply 10|d
 \begin{frame}
-DENOISING VS RESIDUAL DENOSING\\
-==============================
-
-\end{frame}
-
-
-% 1.4. link with heat equation
-\begin{frame}
 LINK WITH HEAT EQUATION\\
 =======================
 
+What is the meaning of this step?
+
+{
+\color{blue}
+$\phantom{mmmm}y\leftarrow y + {\color{darkgreen}h} \left({\color{red}D}(y)-y\right)$
+}
+\pause
+
+%SCRIPT blur g 3  photos/gbarbsquare.png f/gblur3.png
+%SCRIPT plambda f/gblur3.png photos/gbarbsquare.png - -o f/dgblur3.npy
+%SCRIPT qauto f/dgblur3.npy f/dgblur3.png
+%SCRIPT plambda photos/gbarbsquare.png f/dgblur3.npy '0.7 * +' -o f/dgstep.png
+
+\begin{tabular}{cccc}
+	\includegraphics[width=0.23\linewidth]{photos/gbarbsquare.png}&
+	\includegraphics[width=0.23\linewidth]{f/gblur3.png}&
+	\includegraphics[width=0.23\linewidth]{f/dgblur3.png}&
+	\includegraphics[width=0.23\linewidth]{f/dgstep.png}\\
+	$\footnotesize y$ &
+	$\footnotesize D(y)$ &
+	$\footnotesize D(y)-y$ &
+	$\footnotesize y + \frac12\left(D(y)-y\right)$
+\end{tabular}
+
+\pause
+{\small
+This is {\bf one step} of the numerical solution of heat equation!
+}
+
+\fbox{
+$\frac{u^{n+1}-u^n}\tau=\Delta u^n$
+}
+\hfill
+\fbox{
+	$u^{n+1}=u^n+\tau\Delta u^n\color{blue} \approx u^n+\tau\left(g*u^n-u^n\right)$
+}
+
+
+\end{frame}
+
+\begin{frame}[noframenumbering]
+LINK WITH HEAT EQUATION\\
+=======================
+
+{\bf Proposition.}
+Applying the KS iterations to the {\color{blue} gaussian blur} denoiser
+computes an approixmation of the heat equation {\color{blue}
+$u_t=\mathrm{div}\left(\nabla u\right)$}.
+
+\pause
+
+{\bf Proposition.}
+Applying the KS iterations to the {\color{blue} median filter} denoiser
+computes an approixmation of the mean curvature flow
+{\color{blue}$u_t=\left\|\nabla u\right\|\mathrm{div}\left(\frac{\nabla
+u}{\left\|\nabla u\right\|}\right)$}.
+
+\pause
+
+\vfill
+\color{red}
+What about fancier denoisers?\\
+\bf You get fancier PDE!
+\vfill
+
 \end{frame}
 
 
-% 1.5. further links: moisan image iterative filtering, alvarez etal
-\begin{frame}
-LINK WITH OTHER PDE\\
-===================
-
-\end{frame}
+%% 1.4. link with heat equation
+%\begin{frame}
+%DENOISING VS RESIDUAL DENOSING\\
+%==============================
+%
+%
+%\end{frame}
+%
+%
+%% 1.5. further links: moisan image iterative filtering, alvarez etal
+%\begin{frame}
+%LINK WITH OTHER PDE\\
+%===================
+%
+%\end{frame}
 
 
 % 1.6. recall main result of alvarez etal
 \begin{frame}
-IMAGE PDE: GENERAL RESULT\\
-=========================
+IMAGE PDE: GENERAL RESULTS\\
+==========================
 
+\only<1>{
+\includegraphics[width=0.49\textwidth]{photos/aglm.png}%
+\includegraphics[width=0.49\textwidth]{photos/aglm2.png}
+}\only<2>{
+\includegraphics[width=\textwidth]{photos/aglm_table.png}%
+}\only<3>{
+	{\bf Conclusion:}
+
+	Under very general assumptions on the denoiser (regularity, symmetry,
+	{\color{red}locality}), the KS algorithm computes a PDE of the form
+	\[
+		u_t = F(D^2u, Du, t)
+	\]
+	\vfill
+	{\bf Corrollary.}  To obtain really fancy images using KS, you
+	need to use a (very) non-local denoiser.
+}
+
+\end{frame}
+
+\begin{frame}
+IMPLICIT IMAGE MODELS OF CLASSICAL DENOISERS\\
+============================================
+
+\tiny
+\begin{tabular}{lll}
+	\includegraphics[width=0.31\textwidth]{out_perlin.png} &
+	\includegraphics[width=0.31\textwidth]{out_mcm.png} &
+	\includegraphics[width=0.31\textwidth]{out_dct.png} \\
+	gausssian blur (perlin noise) &
+	median filter (mcm) &
+	dct denoising \\
+	&&\\
+	\includegraphics[width=0.31\textwidth]{out_nlm0.png} &
+	\includegraphics[width=0.31\textwidth]{out_nlbayes.png} &
+	\includegraphics[width=0.31\textwidth]{out_ffdnet.png} \\
+	non-local means (nl diffusion) &
+	non-local bayes &
+	ffdnet \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}
+FOR SOME DENOISERS, THE ALGORITHM IS TRICKY TO TUNE\\
+===================================================
+
+KS samples using the ``drunet'' denoiser
+
+{
+	\setlength{\fboxsep}{0pt}%
+	\setlength{\fboxrule}{1pt}%
+\begin{tabular}{lll}
+	\fbox{\includegraphics[width=0.31\textwidth]{f2/out_200.png}} &
+	\fbox{\includegraphics[width=0.31\textwidth]{f2/out_201.png}} &
+	\fbox{\includegraphics[width=0.31\textwidth]{f2/out_211.png}} \\
+	\fbox{\includegraphics[width=0.31\textwidth]{f2/out_240.png}} &
+	\fbox{\includegraphics[width=0.31\textwidth]{f2/out_249.png}} &
+	\fbox{\includegraphics[width=0.31\textwidth]{f2/out_251.png}} \\
+\end{tabular}
+}
 \end{frame}
 
 
@@ -497,29 +671,88 @@ IMAGE PDE: GENERAL RESULT\\
 OTHER STEPS IN THE KS ALGORITHM\\
 ===============================
 
+\vfill
+\includegraphics[width=0.9\linewidth]{ks.png}\footnotesize
+\vfill
+\scriptsize
+\color{blue}
+* The step sizes~$h_t$ decrease to~$0$.
+
+* If $\beta < 1$, gaussian noise of strength~$\gamma_t^2$ is added at each step
+
+* $\sigma_t^2$ is the variance of the previous residual (used only for~$\gamma_t$)
+\vfill
 \end{frame}
 
 
-% 1.8. experiments with various versions of parameters, classical denoisers
-\begin{frame}
-SOME EXPERIMENTS WITH VARIOUS PARAMETERS\\
-========================================
-
-\end{frame}
-
-
-% 1.9. slightly fancier denoisers
-\begin{frame}
-SLIGHTLY FANCIER DENOISERS\\
-==========================
-
-\end{frame}
+%% 1.8. experiments with various versions of parameters, classical denoisers
+%\begin{frame}
+%SOME EXPERIMENTS WITH VARIOUS PARAMETERS\\
+%========================================
+%
+%\end{frame}
+%
+%
+%% 1.9. slightly fancier denoisers
+%\begin{frame}
+%SLIGHTLY FANCIER DENOISERS\\
+%==========================
+%
+%\end{frame}
 
 
 % 1.10. the ks notebook
 \begin{frame}
 FROM THE KS NOTEBOOK\\
 ====================
+
+The KS article includes a color denoiser named {\bf BF-CNN}.  Below are some synthesis results.
+
+
+\vfill
+\includegraphics[width=\textwidth]{f2/ksdemo1.png}
+\includegraphics[width=\textwidth]{f2/ksdemo2.png}
+\includegraphics[width=\textwidth]{f2/ksdemo3.png}
+\includegraphics[width=\textwidth]{f2/ksdemo4.png}
+\vfill
+
+\scriptsize
+Notebook to try:\\
+{\color{blue}\url{
+https://github.com/LabForComputationalVision/universal_inverse_problem
+}}
+\end{frame}
+
+\begin{frame}
+FROM THE KS NOTEBOOK\\
+====================
+
+More examples using {\bf BF-CNN}
+
+\vfill
+\begin{tabular}{lll}
+	\includegraphics[width=0.31\textwidth]{f2/untitled.png}&
+	\includegraphics[width=0.31\textwidth]{f2/untitled2.png}&
+	\includegraphics[width=0.31\textwidth]{f2/untitled3.png}\\
+	\includegraphics[width=0.31\textwidth]{f2/untitled4.png}&
+	\includegraphics[width=0.31\textwidth]{f2/untitled5.png}&
+	\includegraphics[width=0.31\textwidth]{f2/untitled6.png}\\
+\end{tabular}
+
+
+\scriptsize
+Notebook to try:\\
+{\color{blue}\url{
+https://github.com/LabForComputationalVision/universal_inverse_problem
+}}
+\end{frame}
+
+\begin{frame}
+INTERPRETATION\\
+==============
+
+\vfill
+\includegraphics[width=\textwidth]{f2/ksfig.png}
 
 \end{frame}
 
@@ -549,49 +782,82 @@ FROM THE KS NOTEBOOK\\
 LINEAR INVERSE PROBLEMS : DEFINITION\\
 ====================================
 
+It's just a problem with linear constraints:
+
+$\qquad\min E(x)$\\
+$\qquad\mathrm{s.t.}\ {\color{red}M}x=t$
+
+\vfill
+Examples:
+
+{\bf Inpainting:}\\
+$M=$ value of the pixels on a part of the image.
+
+{\bf Super-resolution:} $M=$ zoom-out operator.
+
+{\bf Spectral inpainting:} $M=$ fix a part of the spectrum
+
 \end{frame}
 
 \begin{frame}
 LINEAR INVERSE PROBLEMS : INTERPRETATION\\
 ========================================
 
+\begin{tabular}{ll}
+	\includegraphics[width=0.47\linewidth]{f2/ksfig3.png}&
+	\includegraphics[width=0.47\linewidth]{f2/ksfig4.png}\\
+	base KS &
+	project to M at each iteration
+\end{tabular}
+
 \end{frame}
 
 
-% 2.1. examples of linv problems: inpainting, spatial zoom-in, spectral zoom-in
-\begin{frame}
-EXAMPLES OF LINEAR INVERSE PROBLEMS\\
-===================================
-
-\end{frame}
+%% 2.1. examples of linv problems: inpainting, spatial zoom-in, spectral zoom-in
+%\begin{frame}
+%EXAMPLES OF LINEAR INVERSE PROBLEMS\\
+%===================================
+%
+%\end{frame}
 
 % 2.2. see the modified algorithm
 \begin{frame}
 MODIFIED KS ALGORITHM\\
 =====================
 
+\includegraphics[width=\linewidth]{ks2.png}
+
 \end{frame}
 
 % 2.3. link with laplace inpainting
 \begin{frame}
-LINK WITH LAPLACE INPAINTING\\
-============================
+EXAMPLES\\
+========
+
+\only<1>{\includegraphics[width=\linewidth]{f2/inp1.png}}
+\only<2>{\includegraphics[width=\linewidth]{f2/inp2.png}}
+\only<3>{\includegraphics[width=\linewidth]{f2/inp3.png}}
+\only<4>{\includegraphics[width=\linewidth]{f2/inp4.png}}
 
 \end{frame}
 
 % 2.4. link with tv inpainting
 \begin{frame}
-LINK WITH TV INPAINTING\\
-=======================
+LINK WITH PDE INPAINTING\\
+========================
+
+Denoiser=gaussian $\Longrightarrow$ harmonic inpainting
+
+denoiser=meduian $\Longrightarrow$ TV inpainting
 
 \end{frame}
 
-% 2.5. examples with fancier denoisers
-\begin{frame}
-EXAMPLES WITH FANCIER DENOISERS\\
-===============================
-
-\end{frame}
+%% 2.5. examples with fancier denoisers
+%\begin{frame}
+%EXAMPLES WITH FANCIER DENOISERS\\
+%===============================
+%
+%\end{frame}
 
 
 
@@ -616,6 +882,8 @@ EXAMPLES WITH FANCIER DENOISERS\\
 SOURCE CODE OF THE KS ALGORITHM: {\bf CORE FUNCTION}\\
 ==============================================
 
+\includegraphics[width=\linewidth]{f2/kscode.png}
+
 \end{frame}
 
 % 3.2. show the ks source code (main function, with denoiser selection)
@@ -623,6 +891,7 @@ SOURCE CODE OF THE KS ALGORITHM: {\bf CORE FUNCTION}\\
 SOURCE CODE OF THE KS ALGORITHM: {\bf DENOISER SELECTION}\\
 ===================================================
 
+\includegraphics[width=\linewidth]{f2/kscode2.png}
 
 \end{frame}
 
@@ -631,7 +900,9 @@ SOURCE CODE OF THE KS ALGORITHM: {\bf DENOISER SELECTION}\\
 PIP INSTALL IPOL\\
 ================
 
-see local ipol run
+%see local ipol run
+\includegraphics[height=0.9\textheight]{clipolcollab.png}
+
 \end{frame}
 
 %% 3.4. local ipol run
@@ -645,6 +916,8 @@ see local ipol run
 \begin{frame}
 IPOL DESCRIPTION LANGUAGE EXAMPLES\\
 ==================================
+
+(I don't want to show this, yet...)
 
 \end{frame}
 
